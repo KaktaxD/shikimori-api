@@ -1,0 +1,28 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=anime_user
+      - POSTGRES_PASSWORD=12341234
+      - POSTGRES_DB=shikimori_v4
+
+  redis:
+    image: redis:7-alpine
+
+volumes:
+  postgres_data:
